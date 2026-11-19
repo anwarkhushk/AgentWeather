@@ -15,7 +15,7 @@ params = {
     "longitude": longitude,
     "hourly": "us_aqi,pm2_5,pm10",
     "timezone": "Asia/Karachi",
-    "forecast_days": 1
+    "forecast_days": 5
 }
 
 # Send request to API

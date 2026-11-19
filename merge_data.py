@@ -1,61 +1,147 @@
 
 import pandas as pd
+import numpy as np
 
-# 1. Load raw datasets
+# 1. Load datasets
 aqi_df = pd.read_csv("aqi_data.csv")
 weather_df = pd.read_csv("weather_data.csv")
 
-# 2. Convert timestamps into datetime format
+# 2. Convert timestamps to datetime
 aqi_df["timestamp"] = pd.to_datetime(aqi_df["timestamp"])
 weather_df["timestamp"] = pd.to_datetime(weather_df["timestamp"])
 
-# 3. Set timestamps as indexes
-aqi_df = aqi_df.set_index("timestamp")
-weather_df = weather_df.set_index("timestamp")
+# 3. Check duplicate timestamps
+print("Duplicate AQI timestamps:", aqi_df["timestamp"].duplicated().sum())
+print("Duplicate Weather timestamps:", weather_df["timestamp"].duplicated().sum())
 
-# 4. Align weather data with hourly AQI timestamps
+# 4. Set timestamps as indexes
+aqi_df = aqi_df.set_index("timestamp").sort_index()
+weather_df = weather_df.set_index("timestamp").sort_index()
+
+# 5. Find common time range
+start_time = max(aqi_df.index.min(), weather_df.index.min())
+end_time = min(aqi_df.index.max(), weather_df.index.max())
+
+print("\nCommon time range:", start_time, "to", end_time)
+
+# 6. Create hourly timestamps
+hourly_index = pd.date_range(
+    start=start_time,
+    end=end_time,
+    freq="h"
+)
+
+# 7. Restrict AQI data to common time range
+aqi_aligned = aqi_df.reindex(hourly_index)
+
+# 8. Align weather data with hourly timestamps
 weather_aligned = weather_df.reindex(
-    weather_df.index.union(aqi_df.index)
+    weather_df.index.union(hourly_index)
 ).sort_index()
 
-# 5. Interpolate numerical weather values
+# 9. Interpolate continuous numerical weather features
 numeric_columns = [
     "temperature",
     "humidity",
     "pressure",
-    "wind_speed"
+    "wind_speed",
+    "rain_probability"
 ]
 
 weather_aligned[numeric_columns] = (
     weather_aligned[numeric_columns]
-    .interpolate(method="time")
+    .interpolate(
+        method="time",
+        limit=2,
+        limit_area="inside"
+    )
 )
 
-# 6. Fill missing categorical weather descriptions
+# 10. Circular interpolation for wind direction
+radians = np.deg2rad(weather_aligned["wind_direction"])
+
+sin_values = pd.Series(
+    np.sin(radians),
+    index=weather_aligned.index
+)
+
+cos_values = pd.Series(
+    np.cos(radians),
+    index=weather_aligned.index
+)
+
+sin_values = sin_values.interpolate(
+    method="time",
+    limit=2,
+    limit_area="inside"
+)
+
+cos_values = cos_values.interpolate(
+    method="time",
+    limit=2,
+    limit_area="inside"
+)
+
+weather_aligned["wind_direction"] = (
+    np.rad2deg(np.arctan2(sin_values, cos_values)) % 360
+)
+
+# 11. Handle precipitation
+weather_aligned["precipitation"] = (
+    weather_aligned["precipitation"].ffill(limit=2)
+)
+
+# 12. Fill weather descriptions
 weather_aligned["weather"] = (
-    weather_aligned["weather"].ffill()
+    weather_aligned["weather"].ffill(limit=2)
 )
 
-# 7. Keep only timestamps available in AQI dataset
-weather_aligned = weather_aligned.reindex(aqi_df.index)
+# 13. Keep only required hourly timestamps
+weather_aligned = weather_aligned.reindex(hourly_index)
 
-# 8. Merge AQI and aligned weather data
-merged_df = aqi_df.join(weather_aligned)
+# 14. Merge AQI and weather datasets
+merged_df = aqi_aligned.join(weather_aligned)
 
-# 9. Reset timestamp index
+# 15. Reset timestamp index
 merged_df = merged_df.reset_index()
+merged_df = merged_df.rename(columns={"index": "timestamp"})
 
-# 10. Display results
-print("Total merged records:", len(merged_df))
+# 16. Extract time-based features
+merged_df["hour"] = merged_df["timestamp"].dt.hour
+merged_df["day"] = merged_df["timestamp"].dt.day
+merged_df["month"] = merged_df["timestamp"].dt.month
 
-print("\nMerged Dataset:")
+# 17. Calculate rate of change
+merged_df["aqi_rate_change"] = merged_df["us_aqi"].diff()
+merged_df["pm25_rate_change"] = merged_df["pm2_5"].diff()
+merged_df["temperature_rate_change"] = merged_df["temperature"].diff()
+
+# 18. Calculate 3-hour rolling averages
+merged_df["aqi_rolling_mean_3h"] = (
+    merged_df["us_aqi"].rolling(window=3).mean()
+)
+
+merged_df["pm25_rolling_mean_3h"] = (
+    merged_df["pm2_5"].rolling(window=3).mean()
+)
+
+merged_df["temperature_rolling_mean_3h"] = (
+    merged_df["temperature"].rolling(window=3).mean()
+)
+
+# 19. Validate merged dataset
+print("\nTotal merged records:", len(merged_df))
+
+print("\nMerged Dataset Preview:")
 print(merged_df.head(10))
 
-# 11. Check missing values
 print("\nMissing Values:")
 print(merged_df.isnull().sum())
 
-# 12. Save merged dataset
+print("\nDuplicate timestamps:", merged_df["timestamp"].duplicated().sum())
+
+# 20. Save merged dataset
 merged_df.to_csv("merged_data.csv", index=False)
 
 print("\nMerged data saved successfully!")
+print("File: merged_data.csv")

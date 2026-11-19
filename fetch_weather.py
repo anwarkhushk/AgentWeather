@@ -10,17 +10,18 @@ load_dotenv()
 API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 # Karachi location
-CITY = "Karachi"
-COUNTRY = "PK"
-
+latitude = 24.8607
+longitude = 67.0011
 # OpenWeather 5-day / 3-hour forecast API
 URL = "https://api.openweathermap.org/data/2.5/forecast"
 
 params = {
-    "q": f"{CITY},{COUNTRY}",
+    "lat": latitude,
+    "lon": longitude,
     "appid": API_KEY,
     "units": "metric"
 }
+
 
 # Fetch weather data
 response = requests.get(URL, params=params, timeout=30)
@@ -42,12 +43,23 @@ if response.status_code == 200:
     for item in data["list"]:
 
         record = {
-            "timestamp": item["dt_txt"],
+            "timestamp": (
+            pd.to_datetime(item["dt_txt"], utc=True)
+            .tz_convert("Asia/Karachi")
+            .tz_localize(None)
+),
+
+            # Existing weather metrics
             "temperature": item["main"]["temp"],
             "humidity": item["main"]["humidity"],
             "pressure": item["main"]["pressure"],
             "wind_speed": item["wind"]["speed"],
-            "weather": item["weather"][0]["description"]
+            "weather": item["weather"][0]["description"],
+
+            # Additional required weather metrics
+            "precipitation": item.get("rain", {}).get("3h", 0),
+            "rain_probability": item.get("pop", 0) * 100,
+            "wind_direction": item.get("wind", {}).get("deg")
         }
 
         weather_records.append(record)
@@ -70,6 +82,9 @@ if response.status_code == 200:
 
     print("\nDataFrame Preview:")
     print(df.head())
+
+    print("\nMissing Values:")
+    print(df.isnull().sum())
 
 else:
     print("Error:", response.text)
