@@ -4,20 +4,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Connect to Hopsworks
 project = hopsworks.login(engine="python")
 fs = project.get_feature_store()
 
-# Feature Groups to verify
 groups = [
-    ("raw_aqi", 1),
-    ("raw_weather", 1),
-    ("weather_features", 1)
+    ("raw_aqi", 2, 120),
+    ("raw_weather", 2, 40),
+    ("raw_uv", 1, 120),
+    ("weather_features", 2, 103)
 ]
 
-for name, version in groups:
+for name, version, expected_records in groups:
 
-    print(f"\nChecking: {name}")
+    print("\n" + "=" * 50)
+    print(f"Feature Group: {name} v{version}")
 
     fg = fs.get_feature_group(
         name=name,
@@ -27,8 +27,18 @@ for name, version in groups:
     df = fg.read()
 
     print("Records:", len(df))
+    print("Expected:", expected_records)
     print("Columns:", df.columns.tolist())
-    print("First 3 records:")
-    print(df.head(3))
 
-print("\nFeature Store verification completed!")
+    print("\nFirst 3 timestamps:")
+    print(df["timestamp"].head(3))
+
+    print("\nTimezone:", df["timestamp"].dtype)
+
+    assert len(df) == expected_records, (
+        f"Record count mismatch in {name}"
+    )
+
+    print("\nVerification successful!")
+
+print("\nAll Feature Groups verified!")

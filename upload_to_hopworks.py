@@ -13,33 +13,32 @@ fs = project.get_feature_store()
 print("\nConnected to Hopsworks!")
 print("Feature Store:", fs.name)
 
-
-# 3. Load datasets
+# 3. Load all four datasets
 aqi_df = pd.read_csv("aqi_data.csv")
 weather_df = pd.read_csv("weather_data.csv")
+uv_df = pd.read_csv("uv_data.csv")
 features_df = pd.read_csv("merged_data.csv")
 
-
-# 4. Prepare timestamps
-aqi_df["timestamp"] = pd.to_datetime(aqi_df["timestamp"])
-weather_df["timestamp"] = pd.to_datetime(weather_df["timestamp"])
-features_df["timestamp"] = pd.to_datetime(features_df["timestamp"])
-
+# 4. Convert Karachi local timestamps to UTC
+for df in [aqi_df, weather_df, uv_df, features_df]:
+    df["timestamp"] = (
+        pd.to_datetime(df["timestamp"])
+        .dt.tz_localize("Asia/Karachi")
+        .dt.tz_convert("UTC")
+    )
 
 # 5. Add location identifier
-aqi_df["location"] = "karachi"
-weather_df["location"] = "karachi"
-features_df["location"] = "karachi"
-
+for df in [aqi_df, weather_df, uv_df, features_df]:
+    df["location"] = "karachi"
 
 # 6. Define upload function
-def upload_feature_group(df, name, description):
+def upload_feature_group(df, name, version, description):
 
-    print(f"\nPreparing Feature Group: {name}")
+    print(f"\nPreparing Feature Group: {name} v{version}")
 
     feature_group = fs.get_or_create_feature_group(
         name=name,
-        version=1,
+        version=version,
         description=description,
         primary_key=["location"],
         event_time="timestamp",
@@ -55,31 +54,39 @@ def upload_feature_group(df, name, description):
         write_options={"wait_for_job": True}
     )
 
-    print(f"Successfully uploaded: {name}")
+    print(f"Successfully uploaded: {name} v{version}")
 
 
-# 7. Upload raw AQI data
+# 7. Upload raw AQI
 upload_feature_group(
     aqi_df,
     "raw_aqi",
-    "Raw air quality data from Open-Meteo API"
+    2,
+    "Raw AQI observations from Open-Meteo Air Quality API"
 )
 
-
-# 8. Upload raw weather data
+# 8. Upload raw weather
 upload_feature_group(
     weather_df,
     "raw_weather",
-    "Raw weather forecast data from OpenWeather API"
+    2,
+    "Raw weather forecasts from OpenWeather API"
 )
 
+# 9. Upload raw UV
+upload_feature_group(
+    uv_df,
+    "raw_uv",
+    1,
+    "Raw hourly UV Index forecasts from Open-Meteo API"
+)
 
-# 9. Upload engineered weather features
+# 10. Upload engineered features
 upload_feature_group(
     features_df,
     "weather_features",
-    "Merged and engineered weather and air quality features"
+    2,
+    "Merged AQI, weather and UV features with feature engineering"
 )
-
 
 print("\nAll datasets uploaded successfully!")
