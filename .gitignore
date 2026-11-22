@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 data/raw/
+
+# Trained model artifacts
+*.pkl
+*.keras
+registry_artifacts/
