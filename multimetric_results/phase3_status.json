@@ -1,0 +1,17 @@
+{
+  "phase": 3,
+  "status": "COMPLETE",
+  "forecast_metrics": {
+    "AQI": "LSTM selected on validation (registered as aqi_lstm v1)",
+    "Temperature": "SARIMAX selected on validation (registered as temperature_sarimax v2)",
+    "Humidity": "SARIMAX selected on validation (registered as humidity_sarimax v1)",
+    "Precipitation": "Naive baseline selected on validation (precipitation_sarimax v1 registered as comparison model)",
+    "UV": "Naive baseline selected on validation (uv_sarimax v1 registered as comparison model)",
+    "Wind speed": "Naive baseline selected on validation (wind_speed_sarimax v1 registered as comparison model)",
+    "Wind direction": "LSTM selected on validation vector MAE/RMSE/R2 (registered in weather_multimetric_lstm v1)",
+    "Rain probability": "Same-protocol monsoon validation comparison completed (rain_probability_rf v1 beats Naive on probability RMSE/PR-AUC; threshold 0.15 beats 0.05 on F1 while Naive binary F1 is 0.3057)"
+  },
+  "registry": "Existing model versions and artifacts verified; no existing versions overwritten or deleted",
+  "promotion_policy": "Validation-only comparison and promotion gate verified; no automatic registry mutation executed",
+  "pending_items": []
+}

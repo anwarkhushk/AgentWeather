@@ -1,0 +1,50 @@
+{
+  "validation_period": "2024-07-01 to 2024-10-31",
+  "validation_method": "chronological_monsoon_holdout",
+  "validation_precision": 0.2421875,
+  "validation_recall": 0.39490445859872614,
+  "validation_f1": 0.30024213075060535,
+  "validation_pr_auc": 0.20828472029786374,
+  "validation_mae": 0.08936544669886787,
+  "validation_rmse": 0.21476239703305788,
+  "validation_r2": 0.08405852070038244,
+  "decision_threshold": 0.15,
+  "incumbent_threshold_0.05": {
+    "precision": 0.1277533039647577,
+    "recall": 0.7388535031847133,
+    "f1": 0.21784037558685446,
+    "pr_auc": 0.20828472029786374,
+    "mae": 0.08936544669886787,
+    "rmse": 0.21476239703305788,
+    "r2": 0.08405852070038244,
+    "threshold": 0.05
+  },
+  "naive_baseline_24h": {
+    "precision": 0.3057324840764331,
+    "recall": 0.3057324840764331,
+    "f1": 0.3057324840764331,
+    "pr_auc": 0.13039647106073884,
+    "mae": 0.07384823848238482,
+    "rmse": 0.27175032379444336,
+    "r2": -0.46653145402960283
+  },
+  "promotion_evaluation": {
+    "by_f1": {
+      "should_promote": false,
+      "reason": "Candidate does not beat the naive baseline."
+    },
+    "by_pr_auc": {
+      "should_promote": false,
+      "reason": "Candidate does not improve the registered model."
+    },
+    "by_probability_rmse": {
+      "should_promote": false,
+      "reason": "Candidate does not improve the registered model."
+    },
+    "note": "Candidate and registered incumbent share identical RandomForestClassifier weights (max probability difference 1.11e-16) and identical probability metrics (PR-AUC=0.2083, RMSE=0.2148, R2=0.0841), both beating the Naive baseline on PR-AUC (0.1304) and probability RMSE (0.2718). On thresholded binary F1, threshold 0.15 improves over incumbent threshold 0.05 (0.3002 vs 0.2178), while Naive 24h persistence achieves binary F1 0.3057."
+  },
+  "validation_rows": 2952,
+  "validation_rain_events": 157,
+  "training_rows": 12936,
+  "purged_rows": 24
+}

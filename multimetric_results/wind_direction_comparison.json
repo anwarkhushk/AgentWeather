@@ -1,0 +1,88 @@
+{
+  "representation": "2D unit vector (wind_direction_sin, wind_direction_cos) with circular angle reconstruction via atan2(sin, cos) % 360",
+  "validation": {
+    "LSTM": {
+      "sin_MAE": 0.3205004035345513,
+      "sin_RMSE": 0.45139187500709255,
+      "sin_R2": 0.5654189129578154,
+      "cos_MAE": 0.30535255294603336,
+      "cos_RMSE": 0.3921873832649939,
+      "cos_R2": 0.5708957268809889,
+      "vector_MAE": 0.3129264782402923,
+      "vector_RMSE": 0.4228265817621486,
+      "vector_R2": 0.5681573199194021
+    },
+    "SARIMAX": {
+      "sin_MAE": 0.344341,
+      "sin_RMSE": 0.480056,
+      "sin_R2": 0.512768,
+      "cos_MAE": 0.287127,
+      "cos_RMSE": 0.382922,
+      "cos_R2": 0.590582,
+      "vector_MAE": 0.3157338931015058,
+      "vector_RMSE": 0.4342138385704416,
+      "vector_R2": 0.5516748682734525,
+      "circular_MAE_deg": 30.5705,
+      "circular_RMSE_deg": 46.8147
+    },
+    "RF": {
+      "sin_MAE": 0.3703325765163228,
+      "sin_RMSE": 0.49882935986975074,
+      "sin_R2": 0.473914,
+      "cos_MAE": 0.3068058420815775,
+      "cos_RMSE": 0.3988550177814008,
+      "cos_R2": 0.555802,
+      "vector_MAE": 0.33856920929895015,
+      "vector_RMSE": 0.4516171219498529,
+      "vector_R2": 0.5148580425971014,
+      "circular_MAE_deg": 32.5532,
+      "circular_RMSE_deg": 48.1681
+    },
+    "Naive": {
+      "sin_MAE": 0.335775,
+      "sin_RMSE": 0.561763,
+      "sin_R2": 0.332796,
+      "cos_MAE": 0.31728,
+      "cos_RMSE": 0.456681,
+      "cos_R2": 0.417665,
+      "vector_MAE": 0.3265277892602926,
+      "vector_RMSE": 0.5119252822894022,
+      "vector_R2": 0.3752306064310695,
+      "circular_MAE_deg": 32.6497,
+      "circular_RMSE_deg": 49.2421
+    }
+  },
+  "test_aligned": {
+    "SARIMAX": {
+      "vector_MAE": 0.2782,
+      "vector_RMSE": 0.3911,
+      "vector_R2": 0.6048,
+      "circular_MAE_deg": 24.7437,
+      "circular_RMSE_deg": 40.4733
+    },
+    "RF": {
+      "vector_MAE": 0.2852,
+      "vector_RMSE": 0.4083,
+      "vector_R2": 0.5687,
+      "circular_MAE_deg": 27.793,
+      "circular_RMSE_deg": 43.9983
+    },
+    "LSTM": {
+      "vector_MAE": 0.2888,
+      "vector_RMSE": 0.4196,
+      "vector_R2": 0.5446,
+      "circular_MAE_deg": 28.497,
+      "circular_RMSE_deg": 46.2265
+    },
+    "Naive": {
+      "vector_MAE": 0.26,
+      "vector_RMSE": 0.4338,
+      "vector_R2": 0.5139,
+      "circular_MAE_deg": 25.5212,
+      "circular_RMSE_deg": 41.7212
+    }
+  },
+  "selected_validation_winner": "LSTM",
+  "registered_model": "weather_multimetric_lstm",
+  "registered_version": 1
+}

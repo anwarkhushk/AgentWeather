@@ -1,0 +1,86 @@
+{
+    "AQI": {
+        "champion": "LSTM",
+        "registry_model": "aqi_lstm",
+        "registry_version": 1,
+        "status": "EXISTING_CHAMPION",
+        "reason": "Selected validation winner is already registered."
+    },
+    "Humidity": {
+        "champion": "SARIMAX",
+        "registry_model": "humidity_sarimax",
+        "registry_version": 1,
+        "status": "EXISTING_CHAMPION",
+        "reason": "Selected validation winner is already registered."
+    },
+    "Precipitation": {
+        "champion": "Naive baseline",
+        "registered_comparison_model": "precipitation_sarimax",
+        "registered_comparison_version": 1,
+        "status": "RETAIN_BASELINE",
+        "reason": "No ML model beats the validation baseline."
+    },
+    "Temperature": {
+        "champion": "SARIMAX",
+        "registry_model": "temperature_sarimax",
+        "registry_version": 2,
+        "status": "EXISTING_CHAMPION",
+        "reason": "Selected validation winner is already registered."
+    },
+    "UV": {
+        "champion": "Naive baseline",
+        "registered_comparison_model": "uv_sarimax",
+        "registered_comparison_version": 1,
+        "status": "RETAIN_BASELINE",
+        "reason": "No ML model beats the validation baseline."
+    },
+    "Wind speed": {
+        "champion": "Naive baseline",
+        "registered_comparison_model": "wind_speed_sarimax",
+        "registered_comparison_version": 1,
+        "status": "RETAIN_BASELINE",
+        "reason": "No ML model beats the validation baseline."
+    },
+    "Wind direction": {
+        "champion": "LSTM",
+        "registry_model": "weather_multimetric_lstm",
+        "registry_version": 1,
+        "status": "EXISTING_CHAMPION",
+        "reason": "Selected validation winner is already registered."
+    },
+    "Rain probability": {
+        "champion": "Random Forest (probability) / Naive persistence (binary F1)",
+        "registry_model": "rain_probability_rf",
+        "registry_version": 1,
+        "candidate": "Random Forest (monsoon threshold 0.15)",
+        "same_protocol_validation": {
+            "candidate_threshold_0.15": {
+                "F1": 0.30024213075060535,
+                "PR_AUC": 0.20828472029786374,
+                "RMSE": 0.21476239703305788,
+                "MAE": 0.08936544669886787,
+                "R2": 0.08405852070038244
+            },
+            "incumbent_threshold_0.05": {
+                "F1": 0.21784037558685446,
+                "PR_AUC": 0.20828472029786374,
+                "RMSE": 0.21476239703305788,
+                "MAE": 0.08936544669886787,
+                "R2": 0.08405852070038244
+            },
+            "naive_baseline_24h": {
+                "F1": 0.3057324840764331,
+                "PR_AUC": 0.13039647106073884,
+                "RMSE": 0.27175032379444336,
+                "MAE": 0.07384823848238482,
+                "R2": -0.46653145402960283
+            }
+        },
+        "should_promote_by_f1": false,
+        "should_promote_by_f1_reason": "Candidate does not beat the naive baseline.",
+        "should_promote_by_probability_rmse": false,
+        "should_promote_by_probability_rmse_reason": "Candidate does not improve the registered model.",
+        "status": "EXISTING_CHAMPION",
+        "reason": "Same-protocol monsoon validation comparison completed. Candidate and registered incumbent (rain_probability_rf v1) share identical RandomForestClassifier weights (PR-AUC=0.2083, RMSE=0.2148 < Naive 0.2718). Threshold 0.15 improves F1 over incumbent threshold 0.05 (0.3002 > 0.2178) but does not exceed Naive binary F1 (0.3057); no automatic registry replacement executed."
+    }
+}

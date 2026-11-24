@@ -1,0 +1,66 @@
+{
+    "AQI": {
+        "model": "LSTM",
+        "validation_MAE": 13.1765,
+        "validation_RMSE": 17.6329,
+        "validation_R2": 0.536,
+        "promotion_candidate": true
+    },
+    "Humidity": {
+        "model": "SARIMAX",
+        "validation_MAE": 10.260592938512318,
+        "validation_RMSE": 13.906492860987983,
+        "validation_R2": 0.6343091664181931,
+        "promotion_candidate": true
+    },
+    "Precipitation": {
+        "model": "Naive",
+        "validation_MAE": 0.0001437814521926,
+        "validation_RMSE": 0.0037918524785738,
+        "validation_R2": -1.0014391940513312,
+        "promotion_candidate": false
+    },
+    "Temperature": {
+        "model": "SARIMAX",
+        "validation_MAE": 0.8240474523952311,
+        "validation_RMSE": 1.1173993238640132,
+        "validation_R2": 0.9566953312841928,
+        "promotion_candidate": true
+    },
+    "UV": {
+        "model": "Naive",
+        "validation_MAE": 0.0291876347951114,
+        "validation_RMSE": 0.1203278531172296,
+        "validation_R2": 0.997380259516838,
+        "promotion_candidate": false
+    },
+    "Wind speed": {
+        "model": "Naive",
+        "validation_MAE": 2.649364965252816,
+        "validation_RMSE": 3.459113137089234,
+        "validation_R2": 0.1602975534693629,
+        "promotion_candidate": false
+    },
+    "Wind direction": {
+        "model": "LSTM",
+        "validation_MAE": 0.3129264782402923,
+        "validation_RMSE": 0.4228265817621486,
+        "validation_R2": 0.5681573199194021,
+        "promotion_candidate": true
+    },
+    "Rain probability": {
+        "model": "Random Forest",
+        "validation_F1": 0.30024213075060535,
+        "validation_PR_AUC": 0.20828472029786374,
+        "validation_MAE": 0.08936544669886787,
+        "validation_RMSE": 0.21476239703305788,
+        "validation_R2": 0.08405852070038244,
+        "incumbent_threshold_0.05_F1": 0.21784037558685446,
+        "naive_validation_F1": 0.3057324840764331,
+        "naive_validation_PR_AUC": 0.13039647106073884,
+        "naive_validation_RMSE": 0.27175032379444336,
+        "threshold": 0.15,
+        "promotion_candidate": false,
+        "selection_note": "Random Forest beats Naive baseline on probability RMSE (0.2148 vs 0.2718) and PR-AUC (0.2083 vs 0.1304) and is already registered as rain_probability_rf v1 with identical model weights; candidate threshold 0.15 improves F1 over incumbent threshold 0.05 (0.3002 vs 0.2178) but does not exceed Naive binary persistence F1 (0.3057)."
+    }
+}
