@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 
 from pathlib import Path
+from feature_store_data import load_multimetric_training_data
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.metrics import (
     mean_absolute_error, mean_squared_error, r2_score,
@@ -14,8 +15,7 @@ from sklearn.metrics import (
 Path("multimetric_models").mkdir(exist_ok=True)
 Path("multimetric_results").mkdir(exist_ok=True)
 
-train = pd.read_csv("multi_metric_training_data.csv")
-test = pd.read_csv("multi_metric_testing_data.csv")
+train, test = load_multimetric_training_data()
 
 for df in (train, test):
     df["timestamp"] = pd.to_datetime(df["timestamp"])

@@ -2,11 +2,12 @@
 import numpy as np
 import pandas as pd
 
+from feature_store_data import load_aqi_training_data
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# Load training data and reproduce the exact 80/20 chronological split
-data = pd.read_csv("training_data.csv")
+# Load training data from Hopsworks Feature Store and reproduce the exact 80/20 chronological split
+data, _ = load_aqi_training_data()
 
 split_index = int(len(data) * 0.8)
 

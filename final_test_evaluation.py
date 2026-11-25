@@ -5,6 +5,7 @@ import pandas as pd
 import tensorflow as tf
 import joblib
 
+from feature_store_data import load_aqi_training_data
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -19,11 +20,10 @@ np.random.seed(42)
 tf.random.set_seed(42)
 
 # --------------------------------------------------
-# 1. Load data
+# 1. Load data from Hopsworks Feature Store
 # --------------------------------------------------
 
-train = pd.read_csv("training_data.csv")
-test = pd.read_csv("testing_data.csv")
+train, test = load_aqi_training_data()
 
 target = "target_aqi_24h"
 

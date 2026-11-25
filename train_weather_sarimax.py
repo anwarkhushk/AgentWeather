@@ -4,6 +4,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from feature_store_data import load_multimetric_training_data
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from statsmodels.tsa.statespace.sarimax import SARIMAX
@@ -13,8 +14,7 @@ warnings.filterwarnings("ignore")
 os.makedirs("multimetric_models", exist_ok=True)
 os.makedirs("multimetric_results", exist_ok=True)
 
-train = pd.read_csv("multi_metric_training_data.csv")
-test = pd.read_csv("multi_metric_testing_data.csv")
+train, test = load_multimetric_training_data()
 
 for df in (train, test):
     df["timestamp"] = pd.to_datetime(df["timestamp"])

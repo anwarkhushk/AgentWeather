@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
+from feature_store_data import load_aqi_training_data
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
@@ -17,8 +18,8 @@ from tensorflow.keras.callbacks import EarlyStopping
 np.random.seed(42)
 tf.random.set_seed(42)
 
-# 1. Load data
-train = pd.read_csv("training_data.csv")
+# 1. Load data from Hopsworks Feature Store
+train, _ = load_aqi_training_data()
 
 target = "target_aqi_24h"
 

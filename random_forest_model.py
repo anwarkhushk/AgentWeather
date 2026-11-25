@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 
+from feature_store_data import load_aqi_training_data
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import (
     mean_absolute_error,
@@ -9,9 +10,8 @@ from sklearn.metrics import (
     r2_score
 )
 
-# 1. Load datasets
-train = pd.read_csv("training_data.csv")
-test = pd.read_csv("testing_data.csv")
+# 1. Load datasets from Hopsworks Feature Store
+train, test = load_aqi_training_data()
 
 print("Datasets loaded successfully!")
 

@@ -8,6 +8,7 @@ import pandas as pd
 import tensorflow as tf
 
 from pathlib import Path
+from feature_store_data import load_multimetric_training_data
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from tensorflow.keras.models import Sequential
@@ -20,9 +21,8 @@ tf.random.set_seed(42)
 Path("multimetric_models").mkdir(exist_ok=True)
 Path("multimetric_results").mkdir(exist_ok=True)
 
-# 1. Load data
-train = pd.read_csv("multi_metric_training_data.csv")
-test = pd.read_csv("multi_metric_testing_data.csv")
+# 1. Load data from Hopsworks Feature Store
+train, test = load_multimetric_training_data()
 
 # 2. Create time features
 for df in (train, test):
